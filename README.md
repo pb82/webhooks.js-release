@@ -75,7 +75,7 @@ source.onmessage = (event) => {
       id: webhookEvent["x-request-id"],
       name: webhookEvent["x-github-event"],
       signature: webhookEvent["x-hub-signature"],
-      payload: JSON.stringify(webhookEvent.body),
+      payload: webhookEvent.body,
     })
     .catch(console.error);
 };
@@ -108,7 +108,9 @@ new Webhooks({ secret /*, transform */ });
   <tbody valign="top">
     <tr>
       <td>
-        <code>secret</code>
+        <code>
+          secret
+        </code>
         <em>(String)</em>
       </td>
       <td>
@@ -118,7 +120,9 @@ new Webhooks({ secret /*, transform */ });
     </tr>
     <tr>
       <td>
-        <code>transform</code>
+        <code>
+          transform
+        </code>
         <em>(Function)</em>
       </td>
       <td>
@@ -154,9 +158,11 @@ webhooks.sign(eventPayload);
   <tbody valign="top">
     <tr>
       <td>
-        <code>eventPayload</code>
+        <code>
+          eventPayload
+        </code>
         <em>
-          (String)
+          (Object)
         </em>
       </td>
       <td>
@@ -181,9 +187,11 @@ webhooks.verify(eventPayload, signature);
   <tbody valign="top">
     <tr>
       <td>
-        <code>eventPayload</code>
+        <code>
+          eventPayload
+        </code>
         <em>
-          (Object [deprecated] or String)
+          (Object or String)
         </em>
       </td>
       <td>
@@ -193,7 +201,9 @@ webhooks.verify(eventPayload, signature);
     </tr>
     <tr>
       <td>
-        <code>signature</code>
+        <code>
+          signature
+        </code>
         <em>
           (String)
         </em>
@@ -220,7 +230,9 @@ webhooks.verifyAndReceive({ id, name, payload, signature });
   <tbody valign="top">
     <tr>
       <td>
-        <code>id</code>
+        <code>
+          id
+        </code>
         <em>
           String
         </em>
@@ -231,7 +243,9 @@ webhooks.verifyAndReceive({ id, name, payload, signature });
     </tr>
     <tr>
       <td>
-        <code>name</code>
+        <code>
+          name
+        </code>
         <em>
           String
         </em>
@@ -244,9 +258,11 @@ webhooks.verifyAndReceive({ id, name, payload, signature });
     </tr>
     <tr>
       <td>
-        <code>payload</code>
+        <code>
+          payload
+        </code>
         <em>
-          Object (deprecated) or String
+          Object or String
         </em>
       </td>
       <td>
@@ -256,7 +272,9 @@ webhooks.verifyAndReceive({ id, name, payload, signature });
     </tr>
     <tr>
       <td>
-        <code>signature</code>
+        <code>
+          signature
+        </code>
         <em>
           (String)
         </em>
@@ -305,7 +323,9 @@ webhooks.receive({ id, name, payload });
   <tbody valign="top">
     <tr>
       <td>
-        <code>id</code>
+        <code>
+          id
+        </code>
         <em>
           String
         </em>
@@ -316,7 +336,9 @@ webhooks.receive({ id, name, payload });
     </tr>
     <tr>
       <td>
-        <code>name</code>
+        <code>
+          name
+        </code>
         <em>
           String
         </em>
@@ -329,7 +351,9 @@ webhooks.receive({ id, name, payload });
     </tr>
     <tr>
       <td>
-        <code>payload</code>
+        <code>
+          payload
+        </code>
         <em>
           Object
         </em>
@@ -357,7 +381,9 @@ webhooks.on(eventNames, handler);
   <tbody valign="top">
     <tr>
       <td>
-        <code>eventName</code>
+        <code>
+          eventName
+        </code>
         <em>
           String
         </em>
@@ -369,7 +395,9 @@ webhooks.on(eventNames, handler);
     </tr>
     <tr>
       <td>
-        <code>eventNames</code>
+        <code>
+          eventNames
+        </code>
         <em>
           Array
         </em>
@@ -381,7 +409,9 @@ webhooks.on(eventNames, handler);
     </tr>
     <tr>
       <td>
-        <code>handler</code>
+        <code>
+          handler
+        </code>
         <em>
           Function
         </em>
@@ -408,7 +438,9 @@ webhooks.onAny(handler);
   <tbody valign="top">
     <tr>
       <td>
-        <code>handler</code>
+        <code>
+          handler
+        </code>
         <em>
           Function
         </em>
@@ -439,7 +471,9 @@ Asynchronous `error` event handler are not blocking the `.receive()` method from
   <tbody valign="top">
     <tr>
       <td>
-        <code>handler</code>
+        <code>
+          handler
+        </code>
         <em>
           Function
         </em>
@@ -467,7 +501,9 @@ webhooks.removeListener(eventNames, handler);
   <tbody valign="top">
     <tr>
       <td>
-        <code>eventName</code>
+        <code>
+          eventName
+        </code>
         <em>
           String
         </em>
@@ -479,7 +515,9 @@ webhooks.removeListener(eventNames, handler);
     </tr>
     <tr>
       <td>
-        <code>eventNames</code>
+        <code>
+          eventNames
+        </code>
         <em>
           Array
         </em>
@@ -491,7 +529,9 @@ webhooks.removeListener(eventNames, handler);
     </tr>
     <tr>
       <td>
-        <code>handler</code>
+        <code>
+          handler
+        </code>
         <em>
           Function
         </em>
@@ -516,18 +556,11 @@ const webhooks = new Webhooks({
   secret: "mysecret",
 });
 
-const middleware = createNodeMiddleware(webhooks, { path: "/webhooks" });
-createServer(async (req, res) => {
-  // `middleware` returns `false` when `req` is unhandled (beyond `/webhooks`)
-  if (await middleware(req, res)) return;
-  res.writeHead(404);
-  res.end();
-}).listen(3000);
-// can now receive user authorization callbacks at POST /webhooks
-```
+const middleware = createNodeMiddleware(webhooks, { path: "/" });
 
-The middleware returned from `createNodeMiddleware` can also serve as an
-`Express.js` middleware directly.
+createServer(middleware).listen(3000);
+// can now receive user authorization callbacks at POST /
+```
 
 <table width="100%">
   <tbody valign="top">
@@ -566,6 +599,32 @@ Used for internal logging. Defaults to [`console`](https://developer.mozilla.org
 
 </td>
     </tr>
+    <tr>
+      <td>
+        <code>onUnhandledRequest</code>
+        <em>
+          function
+        </em>
+      </td>
+      <td>
+
+Defaults to
+
+```js
+function onUnhandledRequest(request, response) {
+  response.writeHead(400, {
+    "content-type": "application/json",
+  });
+  response.end(
+    JSON.stringify({
+      error: error.message,
+    })
+  );
+}
+```
+
+</td>
+    </tr>
   <tbody>
 </table>
 
@@ -577,70 +636,64 @@ If there are actions for a webhook, events are emitted for both, the webhook nam
 
 <!-- autogenerated via scripts/generate-types.ts -->
 
-| Event                                                                                                                                                             | Actions                                                                                                                                                                                                                                                                                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`branch_protection_rule`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#branch_protection_rule)                 | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                                                                                 |
-| [`check_run`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_run)                                           | `completed`<br>`created`<br>`requested_action`<br>`rerequested`                                                                                                                                                                                                                                                                                                    |
-| [`check_suite`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_suite)                                       | `completed`<br>`requested`<br>`rerequested`                                                                                                                                                                                                                                                                                                                        |
-| [`code_scanning_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code_scanning_alert)                       | `appeared_in_branch`<br>`closed_by_user`<br>`created`<br>`fixed`<br>`reopened`<br>`reopened_by_user`                                                                                                                                                                                                                                                               |
-| [`commit_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit_comment)                                 | `created`                                                                                                                                                                                                                                                                                                                                                          |
-| [`create`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#create)                                                 |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`delete`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#delete)                                                 |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`dependabot_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#dependabot_alert)                             | `created`<br>`dismissed`<br>`fixed`<br>`reintroduced`<br>`reopened`                                                                                                                                                                                                                                                                                                |
-| [`deploy_key`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deploy_key)                                         | `created`<br>`deleted`                                                                                                                                                                                                                                                                                                                                             |
-| [`deployment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment)                                         | `created`                                                                                                                                                                                                                                                                                                                                                          |
-| [`deployment_protection_rule`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment_protection_rule)         | `requested`                                                                                                                                                                                                                                                                                                                                                        |
-| [`deployment_status`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment_status)                           | `created`                                                                                                                                                                                                                                                                                                                                                          |
-| [`discussion`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion)                                         | `answered`<br>`category_changed`<br>`created`<br>`deleted`<br>`edited`<br>`labeled`<br>`locked`<br>`pinned`<br>`transferred`<br>`unanswered`<br>`unlabeled`<br>`unlocked`<br>`unpinned`                                                                                                                                                                            |
-| [`discussion_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion_comment)                         | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                                                                                 |
-| [`fork`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork)                                                     |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`github_app_authorization`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#github_app_authorization)             | `revoked`                                                                                                                                                                                                                                                                                                                                                          |
-| [`gollum`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#gollum)                                                 |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`installation`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation)                                     | `created`<br>`deleted`<br>`new_permissions_accepted`<br>`suspend`<br>`unsuspend`                                                                                                                                                                                                                                                                                   |
-| [`installation_repositories`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation_repositories)           | `added`<br>`removed`                                                                                                                                                                                                                                                                                                                                               |
-| [`installation_target`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation_target)                       | `renamed`                                                                                                                                                                                                                                                                                                                                                          |
-| [`issue_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue_comment)                                   | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                                                                                 |
-| [`issues`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues)                                                 | `assigned`<br>`closed`<br>`deleted`<br>`demilestoned`<br>`edited`<br>`labeled`<br>`locked`<br>`milestoned`<br>`opened`<br>`pinned`<br>`reopened`<br>`transferred`<br>`unassigned`<br>`unlabeled`<br>`unlocked`<br>`unpinned`                                                                                                                                       |
-| [`label`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label)                                                   | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                                                                                 |
-| [`marketplace_purchase`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#marketplace_purchase)                     | `cancelled`<br>`changed`<br>`pending_change`<br>`pending_change_cancelled`<br>`purchased`                                                                                                                                                                                                                                                                          |
-| [`member`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member)                                                 | `added`<br>`edited`<br>`removed`                                                                                                                                                                                                                                                                                                                                   |
-| [`membership`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#membership)                                         | `added`<br>`removed`                                                                                                                                                                                                                                                                                                                                               |
-| [`merge_group`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#merge_group)                                       | `checks_requested`                                                                                                                                                                                                                                                                                                                                                 |
-| [`meta`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#meta)                                                     | `deleted`                                                                                                                                                                                                                                                                                                                                                          |
-| [`milestone`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#milestone)                                           | `closed`<br>`created`<br>`deleted`<br>`edited`<br>`opened`                                                                                                                                                                                                                                                                                                         |
-| [`org_block`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#org_block)                                           | `blocked`<br>`unblocked`                                                                                                                                                                                                                                                                                                                                           |
-| [`organization`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization)                                     | `deleted`<br>`member_added`<br>`member_invited`<br>`member_removed`<br>`renamed`                                                                                                                                                                                                                                                                                   |
-| [`package`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#package)                                               | `published`<br>`updated`                                                                                                                                                                                                                                                                                                                                           |
-| [`page_build`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#page_build)                                         |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`ping`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#ping)                                                     |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`project`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project)                                               | `closed`<br>`created`<br>`deleted`<br>`edited`<br>`reopened`                                                                                                                                                                                                                                                                                                       |
-| [`project_card`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project_card)                                     | `converted`<br>`created`<br>`deleted`<br>`edited`<br>`moved`                                                                                                                                                                                                                                                                                                       |
-| [`project_column`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project_column)                                 | `created`<br>`deleted`<br>`edited`<br>`moved`                                                                                                                                                                                                                                                                                                                      |
-| [`projects_v2_item`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#projects_v2_item)                             | `archived`<br>`converted`<br>`created`<br>`deleted`<br>`edited`<br>`reordered`<br>`restored`                                                                                                                                                                                                                                                                       |
-| [`public`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#public)                                                 |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`pull_request`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request)                                     | `assigned`<br>`auto_merge_disabled`<br>`auto_merge_enabled`<br>`closed`<br>`converted_to_draft`<br>`demilestoned`<br>`dequeued`<br>`edited`<br>`enqueued`<br>`labeled`<br>`locked`<br>`milestoned`<br>`opened`<br>`ready_for_review`<br>`reopened`<br>`review_request_removed`<br>`review_requested`<br>`synchronize`<br>`unassigned`<br>`unlabeled`<br>`unlocked` |
-| [`pull_request_review`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review)                       | `dismissed`<br>`edited`<br>`submitted`                                                                                                                                                                                                                                                                                                                             |
-| [`pull_request_review_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review_comment)       | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                                                                                 |
-| [`pull_request_review_thread`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review_thread)         | `resolved`<br>`unresolved`                                                                                                                                                                                                                                                                                                                                         |
-| [`push`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push)                                                     |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`registry_package`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#registry_package)                             | `published`<br>`updated`                                                                                                                                                                                                                                                                                                                                           |
-| [`release`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#release)                                               | `created`<br>`deleted`<br>`edited`<br>`prereleased`<br>`published`<br>`released`<br>`unpublished`                                                                                                                                                                                                                                                                  |
-| [`repository`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository)                                         | `archived`<br>`created`<br>`deleted`<br>`edited`<br>`privatized`<br>`publicized`<br>`renamed`<br>`transferred`<br>`unarchived`                                                                                                                                                                                                                                     |
-| [`repository_dispatch`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository_dispatch)                       |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`repository_import`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository_import)                           |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`repository_vulnerability_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository_vulnerability_alert) | `create`<br>`dismiss`<br>`reopen`<br>`resolve`                                                                                                                                                                                                                                                                                                                     |
-| [`secret_scanning_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#secret_scanning_alert)                   | `created`<br>`reopened`<br>`resolved`<br>`revoked`                                                                                                                                                                                                                                                                                                                 |
-| [`secret_scanning_alert_location`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#secret_scanning_alert_location) | `created`                                                                                                                                                                                                                                                                                                                                                          |
-| [`security_advisory`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#security_advisory)                           | `performed`<br>`published`<br>`updated`<br>`withdrawn`                                                                                                                                                                                                                                                                                                             |
-| [`sponsorship`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#sponsorship)                                       | `cancelled`<br>`created`<br>`edited`<br>`pending_cancellation`<br>`pending_tier_change`<br>`tier_changed`                                                                                                                                                                                                                                                          |
-| [`star`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#star)                                                     | `created`<br>`deleted`                                                                                                                                                                                                                                                                                                                                             |
-| [`status`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#status)                                                 |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`team`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#team)                                                     | `added_to_repository`<br>`created`<br>`deleted`<br>`edited`<br>`removed_from_repository`                                                                                                                                                                                                                                                                           |
-| [`team_add`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#team_add)                                             |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`watch`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#watch)                                                   | `started`                                                                                                                                                                                                                                                                                                                                                          |
-| [`workflow_dispatch`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch)                           |                                                                                                                                                                                                                                                                                                                                                                    |
-| [`workflow_job`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_job)                                     | `completed`<br>`in_progress`<br>`queued`<br>`waiting`                                                                                                                                                                                                                                                                                                              |
-| [`workflow_run`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_run)                                     | `completed`<br>`in_progress`<br>`requested`                                                                                                                                                                                                                                                                                                                        |
+| Event                                                                                                                                                             | Actions                                                                                                                                                                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`branch_protection_rule`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#branch_protection_rule)                 | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                   |
+| [`check_run`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_run)                                           | `completed`<br>`created`<br>`requested_action`<br>`rerequested`                                                                                                                                                                                                                                      |
+| [`check_suite`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_suite)                                       | `completed`<br>`requested`<br>`rerequested`                                                                                                                                                                                                                                                          |
+| [`code_scanning_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#code_scanning_alert)                       | `appeared_in_branch`<br>`closed_by_user`<br>`created`<br>`fixed`<br>`reopened`<br>`reopened_by_user`                                                                                                                                                                                                 |
+| [`commit_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#commit_comment)                                 | `created`                                                                                                                                                                                                                                                                                            |
+| [`create`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#create)                                                 |                                                                                                                                                                                                                                                                                                      |
+| [`delete`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#delete)                                                 |                                                                                                                                                                                                                                                                                                      |
+| [`deploy_key`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deploy_key)                                         | `created`<br>`deleted`                                                                                                                                                                                                                                                                               |
+| [`deployment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment)                                         | `created`                                                                                                                                                                                                                                                                                            |
+| [`deployment_status`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#deployment_status)                           | `created`                                                                                                                                                                                                                                                                                            |
+| [`discussion`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion)                                         | `answered`<br>`category_changed`<br>`created`<br>`deleted`<br>`edited`<br>`labeled`<br>`locked`<br>`pinned`<br>`transferred`<br>`unanswered`<br>`unlabeled`<br>`unlocked`<br>`unpinned`                                                                                                              |
+| [`discussion_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#discussion_comment)                         | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                   |
+| [`fork`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#fork)                                                     |                                                                                                                                                                                                                                                                                                      |
+| [`github_app_authorization`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#github_app_authorization)             | `revoked`                                                                                                                                                                                                                                                                                            |
+| [`gollum`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#gollum)                                                 |                                                                                                                                                                                                                                                                                                      |
+| [`installation`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation)                                     | `created`<br>`deleted`<br>`new_permissions_accepted`<br>`suspend`<br>`unsuspend`                                                                                                                                                                                                                     |
+| [`installation_repositories`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#installation_repositories)           | `added`<br>`removed`                                                                                                                                                                                                                                                                                 |
+| [`issue_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue_comment)                                   | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                   |
+| [`issues`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issues)                                                 | `assigned`<br>`closed`<br>`deleted`<br>`demilestoned`<br>`edited`<br>`labeled`<br>`locked`<br>`milestoned`<br>`opened`<br>`pinned`<br>`reopened`<br>`transferred`<br>`unassigned`<br>`unlabeled`<br>`unlocked`<br>`unpinned`                                                                         |
+| [`label`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#label)                                                   | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                   |
+| [`marketplace_purchase`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#marketplace_purchase)                     | `cancelled`<br>`changed`<br>`pending_change`<br>`pending_change_cancelled`<br>`purchased`                                                                                                                                                                                                            |
+| [`member`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#member)                                                 | `added`<br>`edited`<br>`removed`                                                                                                                                                                                                                                                                     |
+| [`membership`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#membership)                                         | `added`<br>`removed`                                                                                                                                                                                                                                                                                 |
+| [`meta`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#meta)                                                     | `deleted`                                                                                                                                                                                                                                                                                            |
+| [`milestone`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#milestone)                                           | `closed`<br>`created`<br>`deleted`<br>`edited`<br>`opened`                                                                                                                                                                                                                                           |
+| [`org_block`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#org_block)                                           | `blocked`<br>`unblocked`                                                                                                                                                                                                                                                                             |
+| [`organization`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#organization)                                     | `deleted`<br>`member_added`<br>`member_invited`<br>`member_removed`<br>`renamed`                                                                                                                                                                                                                     |
+| [`package`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#package)                                               | `published`<br>`updated`                                                                                                                                                                                                                                                                             |
+| [`page_build`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#page_build)                                         |                                                                                                                                                                                                                                                                                                      |
+| [`ping`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#ping)                                                     |                                                                                                                                                                                                                                                                                                      |
+| [`project`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project)                                               | `closed`<br>`created`<br>`deleted`<br>`edited`<br>`reopened`                                                                                                                                                                                                                                         |
+| [`project_card`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project_card)                                     | `converted`<br>`created`<br>`deleted`<br>`edited`<br>`moved`                                                                                                                                                                                                                                         |
+| [`project_column`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#project_column)                                 | `created`<br>`deleted`<br>`edited`<br>`moved`                                                                                                                                                                                                                                                        |
+| [`projects_v2_item`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#projects_v2_item)                             | `archived`<br>`converted`<br>`created`<br>`deleted`<br>`edited`<br>`reordered`<br>`restored`                                                                                                                                                                                                         |
+| [`public`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#public)                                                 |                                                                                                                                                                                                                                                                                                      |
+| [`pull_request`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request)                                     | `assigned`<br>`auto_merge_disabled`<br>`auto_merge_enabled`<br>`closed`<br>`converted_to_draft`<br>`edited`<br>`labeled`<br>`locked`<br>`opened`<br>`ready_for_review`<br>`reopened`<br>`review_request_removed`<br>`review_requested`<br>`synchronize`<br>`unassigned`<br>`unlabeled`<br>`unlocked` |
+| [`pull_request_review`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review)                       | `dismissed`<br>`edited`<br>`submitted`                                                                                                                                                                                                                                                               |
+| [`pull_request_review_comment`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review_comment)       | `created`<br>`deleted`<br>`edited`                                                                                                                                                                                                                                                                   |
+| [`pull_request_review_thread`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request_review_thread)         | `resolved`<br>`unresolved`                                                                                                                                                                                                                                                                           |
+| [`push`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push)                                                     |                                                                                                                                                                                                                                                                                                      |
+| [`release`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#release)                                               | `created`<br>`deleted`<br>`edited`<br>`prereleased`<br>`published`<br>`released`<br>`unpublished`                                                                                                                                                                                                    |
+| [`repository`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository)                                         | `archived`<br>`created`<br>`deleted`<br>`edited`<br>`privatized`<br>`publicized`<br>`renamed`<br>`transferred`<br>`unarchived`                                                                                                                                                                       |
+| [`repository_dispatch`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository_dispatch)                       |                                                                                                                                                                                                                                                                                                      |
+| [`repository_import`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository_import)                           |                                                                                                                                                                                                                                                                                                      |
+| [`repository_vulnerability_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#repository_vulnerability_alert) | `create`<br>`dismiss`<br>`reopen`<br>`resolve`                                                                                                                                                                                                                                                       |
+| [`secret_scanning_alert`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#secret_scanning_alert)                   | `created`<br>`reopened`<br>`resolved`                                                                                                                                                                                                                                                                |
+| [`security_advisory`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#security_advisory)                           | `performed`<br>`published`<br>`updated`<br>`withdrawn`                                                                                                                                                                                                                                               |
+| [`sponsorship`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#sponsorship)                                       | `cancelled`<br>`created`<br>`edited`<br>`pending_cancellation`<br>`pending_tier_change`<br>`tier_changed`                                                                                                                                                                                            |
+| [`star`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#star)                                                     | `created`<br>`deleted`                                                                                                                                                                                                                                                                               |
+| [`status`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#status)                                                 |                                                                                                                                                                                                                                                                                                      |
+| [`team`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#team)                                                     | `added_to_repository`<br>`created`<br>`deleted`<br>`edited`<br>`removed_from_repository`                                                                                                                                                                                                             |
+| [`team_add`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#team_add)                                             |                                                                                                                                                                                                                                                                                                      |
+| [`watch`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#watch)                                                   | `started`                                                                                                                                                                                                                                                                                            |
+| [`workflow_dispatch`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch)                           |                                                                                                                                                                                                                                                                                                      |
+| [`workflow_job`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_job)                                     | `completed`<br>`in_progress`<br>`queued`                                                                                                                                                                                                                                                             |
+| [`workflow_run`](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_run)                                     | `completed`<br>`requested`                                                                                                                                                                                                                                                                           |
 
 <!-- /autogenerated via scripts/generate-types.ts -->
 
@@ -655,14 +708,12 @@ emitterEventNames; // ["check_run", "check_run.completed", ...]
 
 ## TypeScript
 
-The types for the webhook payloads are sourced from [`@octokit/webhooks-types`](https://github.com/octokit/webhooks/tree/main/payload-types),
+The types for the webhook payloads are sourced from [`@octokit/webhooks-types`](https://github.com/octokit/webhooks/tree/master/payload-types),
 which can be used by themselves.
 
 In addition to these types, `@octokit/webhooks` exports 2 types specific to itself:
 
 Note that changes to the exported types are not considered breaking changes, as the changes will not impact production code, but only fail locally or during CI at build time.
-
-**⚠️ Caution ⚠️**: Webhooks Types are expected to be used with the [`strictNullChecks` option](https://www.typescriptlang.org/tsconfig#strictNullChecks) enabled in your `tsconfig`. If you don't have this option enabled, there's the possibility that you get `never` as the inferred type in some use cases. See [octokit/webhooks#395](https://github.com/octokit/webhooks/issues/395) for details.
 
 ### `EmitterWebhookEventName`
 

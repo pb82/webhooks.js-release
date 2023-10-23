@@ -1,17 +1,20 @@
-import type { RequestError } from "@octokit/request-error";
+import { RequestError } from "@octokit/request-error";
 import type { WebhookEventMap, WebhookEventName } from "@octokit/webhooks-types";
-import type { Logger } from "./createLogger";
+import { Logger } from "./createLogger";
 import type { emitterEventNames } from "./generated/webhook-names";
-export type EmitterWebhookEventName = (typeof emitterEventNames)[number];
-export type EmitterWebhookEvent<TEmitterEvent extends EmitterWebhookEventName = EmitterWebhookEventName> = TEmitterEvent extends `${infer TWebhookEvent}.${infer TAction}` ? BaseWebhookEvent<Extract<TWebhookEvent, WebhookEventName>> & {
+export declare type EmitterWebhookEventName = typeof emitterEventNames[number];
+export declare type EmitterWebhookEvent<TEmitterEvent extends EmitterWebhookEventName = EmitterWebhookEventName> = TEmitterEvent extends `${infer TWebhookEvent}.${infer TAction}` ? BaseWebhookEvent<Extract<TWebhookEvent, WebhookEventName>> & {
     payload: {
         action: TAction;
     };
 } : BaseWebhookEvent<Extract<TEmitterEvent, WebhookEventName>>;
-export type EmitterWebhookEventWithStringPayloadAndSignature = {
+export declare type EmitterWebhookEventWithStringPayloadAndSignature = {
     id: string;
     name: EmitterWebhookEventName;
     payload: string;
+    signature: string;
+};
+export declare type EmitterWebhookEventWithSignature = EmitterWebhookEvent & {
     signature: string;
 };
 interface BaseWebhookEvent<TName extends WebhookEventName> {
@@ -24,10 +27,10 @@ export interface Options<TTransformed = unknown> {
     transform?: TransformMethod<TTransformed>;
     log?: Partial<Logger>;
 }
-type TransformMethod<T> = (event: EmitterWebhookEvent) => T | PromiseLike<T>;
-export type HandlerFunction<TName extends EmitterWebhookEventName, TTransformed> = (event: EmitterWebhookEvent<TName> & TTransformed) => any;
-export type RemoveHandlerFunction<TName extends EmitterWebhookEventName | "*", TTransformed> = (event: EmitterWebhookEvent<Exclude<TName, "*">> & TTransformed) => any;
-type Hooks = {
+declare type TransformMethod<T> = (event: EmitterWebhookEvent) => T | PromiseLike<T>;
+export declare type HandlerFunction<TName extends EmitterWebhookEventName, TTransformed> = (event: EmitterWebhookEvent<TName> & TTransformed) => any;
+export declare type RemoveHandlerFunction<TName extends EmitterWebhookEventName | "*", TTransformed> = (event: EmitterWebhookEvent<Exclude<TName, "*">> & TTransformed) => any;
+declare type Hooks = {
     [key: string]: Function[];
 };
 export interface State extends Options<any> {
@@ -38,7 +41,7 @@ export interface State extends Options<any> {
 /**
  * Error object with optional properties coming from `octokit.request` errors
  */
-export type WebhookError = Error & Partial<RequestError>;
+export declare type WebhookError = Error & Partial<RequestError>;
 export interface WebhookEventHandlerError extends AggregateError<WebhookError> {
     event: EmitterWebhookEvent;
 }

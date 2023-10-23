@@ -1,4 +1,4 @@
-import type { EmitterWebhookEventWithStringPayloadAndSignature, State } from "./types";
+import { EmitterWebhookEventWithStringPayloadAndSignature, EmitterWebhookEventWithSignature, State } from "./types";
 export declare function verifyAndReceive(state: State & {
     secret: string;
-}, event: EmitterWebhookEventWithStringPayloadAndSignature): Promise<any>;
+}, event: EmitterWebhookEventWithStringPayloadAndSignature | EmitterWebhookEventWithSignature): Promise<any>;
